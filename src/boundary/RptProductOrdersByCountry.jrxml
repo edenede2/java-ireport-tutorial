@@ -1,0 +1,42 @@
+<!-- Created with Jaspersoft Studio version 7.0.1.final using JasperReports Library version 7.0.1-573496633c2b4074e32f433154b543003f7d2498  -->
+<jasperReport name="RptProductOrdersByCountryController" language="java" pageWidth="842" pageHeight="595" orientation="Landscape" columnWidth="802" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="4734fa23-6679-4e7f-8cb4-87647f37b13c">
+	<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="Tirgul9Eden"/>
+	<parameter name="p1" class="java.lang.Integer">
+		<description><![CDATA[productID]]></description>
+	</parameter>
+	<parameter name="productName" class="java.lang.String"/>
+	<query language="SQL"><![CDATA[SELECT TblOrders.ShipCountry, Count(TblOrders.OrderID) AS NumOfOrders
+FROM TblOrders INNER JOIN (TblProducts INNER JOIN TblOrderDetails ON TblProducts.ProductID = TblOrderDetails.ProductID) ON TblOrders.OrderID = TblOrderDetails.OrderID
+WHERE (((TblProducts.ProductID)=$P{p1}))
+GROUP BY TblOrders.ShipCountry
+ORDER BY TblOrders.ShipCountry;]]></query>
+	<field name="ShipCountry" class="java.lang.String">
+		<property name="net.sf.jasperreports.sql.field.column.name" value="ShipCountry"/>
+	</field>
+	<field name="NumOfOrders" class="java.lang.Number">
+		<property name="net.sf.jasperreports.sql.field.column.name" value="NumOfOrders"/>
+	</field>
+	<background splitType="Stretch"/>
+	<title height="79" splitType="Stretch">
+		<element kind="textField" uuid="07e03ade-df12-4a43-95f8-e547a735428b" x="0" y="0" width="800" height="79" forecolor="#1900FF" fontSize="19.0" bold="true" hTextAlign="Center" vTextAlign="Middle">
+			<expression><![CDATA[CONCATENATE($P{productName}, "'s Orders by Country")]]></expression>
+		</element>
+		<element kind="textField" uuid="9ccb34dd-1723-439a-a206-cce809fc5002" x="700" y="0" width="100" height="30" pattern="MMMMM dd, yyyy">
+			<expression><![CDATA[new java.util.Date()]]></expression>
+		</element>
+	</title>
+	<summary height="474" splitType="Stretch">
+		<element kind="chart" chartType="pie" uuid="5bb3ea13-5c3c-4441-9ac1-3591db51f5e0" x="0" y="0" width="800" height="474" evaluationTime="Report" theme="default">
+			<dataset kind="pie">
+				<series>
+					<keyExpression><![CDATA[$F{ShipCountry}]]></keyExpression>
+					<valueExpression><![CDATA[$F{NumOfOrders}]]></valueExpression>
+				</series>
+			</dataset>
+			<plot labelFormat="{2}">
+				<itemLabel/>
+			</plot>
+		</element>
+	</summary>
+</jasperReport>

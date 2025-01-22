@@ -9,6 +9,11 @@
 <!-- in the project's Project Properties dialog box.-->
 <project name="ireport-tutorial" default="default" basedir=".">
     <description>Builds, tests, and runs the project ireport-tutorial.</description>
+    
+    <path id="classpath">
+        <fileset dir="lib" includes="**/*.jar"/>
+    </path>
+
     <import file="nbproject/build-impl.xml"/>
     <!--
 
@@ -70,4 +75,25 @@
     nbproject/build-impl.xml file. 
 
     -->
+    <target name="create-executable-jar" depends="compile">
+        <property name="libs.dir" value="lib"/>
+        <jar destfile="dist/${ant.project.name}.jar">
+            <manifest>
+                <attribute name="Main-Class" value="boundary.North2000"/>
+                <attribute name="Class-Path" value="."/>
+            </manifest>
+            <fileset dir="build/classes"/>
+            <!-- Include all dependencies from lib directory -->
+            <zipgroupfileset dir="${libs.dir}" includes="**/*.jar"/>
+        </jar>
+    </target>
+
+    <target name="-do-compile">
+        <javac srcdir="${src.dir}"
+               destdir="${build.classes.dir}"
+               debug="${javac.debug}"
+               includeantruntime="false">
+            <classpath refid="classpath"/>
+        </javac>
+    </target>
 </project>
