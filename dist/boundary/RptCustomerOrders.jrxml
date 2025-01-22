@@ -1,0 +1,256 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with Jaspersoft Studio version 6.4.3.final using JasperReports Library version 6.4.3  -->
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="RptCustomerOrders" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="a150728b-c182-43cf-a1dc-929509275279">
+	<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="UCA"/>
+	<queryString language="SQL">
+		<![CDATA[SELECT TblOrders.OrderID, TblOrders.CustomerID, TblCustomers.CompanyName, Year([OrderDate]) AS OrderYear, TblOrders.OrderDate, TblOrders.ShipVia, TblOrders.ShipAddress, TblOrders.ShipCity, TblOrders.ShipCountry, Sum([Quantity]*[UnitPrice]*(1-[Discount])) AS OrderPrice
+FROM (TblProducts INNER JOIN (TblOrders INNER JOIN TblOrderDetails ON TblOrders.OrderID = TblOrderDetails.OrderID) ON TblProducts.ProductID = TblOrderDetails.ProductID) INNER JOIN TblCustomers ON TblOrders.CustomerID = TblCustomers.CustomerID
+GROUP BY TblOrders.OrderID, TblOrders.CustomerID, TblCustomers.CompanyName, Year([OrderDate]), TblOrders.OrderDate, TblOrders.ShipVia, TblOrders.ShipAddress, TblOrders.ShipCity, TblOrders.ShipCountry
+ORDER BY TblCustomers.CompanyName, Year([OrderDate]);]]>
+	</queryString>
+	<field name="ORDERID" class="java.lang.Integer">
+		<property name="com.jaspersoft.studio.field.label" value="ORDERID"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="SYSTEM_SUBQUERY"/>
+	</field>
+	<field name="CustomerID" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="CustomerID"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="SYSTEM_SUBQUERY"/>
+	</field>
+	<field name="CompanyName" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="CompanyName"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="TblCustomers"/>
+	</field>
+	<field name="OrderYear" class="java.lang.Integer">
+		<property name="com.jaspersoft.studio.field.label" value="OrderYear"/>
+	</field>
+	<field name="OrderDate" class="java.sql.Timestamp">
+		<property name="com.jaspersoft.studio.field.label" value="OrderDate"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="SYSTEM_SUBQUERY"/>
+	</field>
+	<field name="ShipVia" class="java.lang.Integer">
+		<property name="com.jaspersoft.studio.field.label" value="ShipVia"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="SYSTEM_SUBQUERY"/>
+	</field>
+	<field name="ShipAddress" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="ShipAddress"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="SYSTEM_SUBQUERY"/>
+	</field>
+	<field name="ShipCity" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="ShipCity"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="SYSTEM_SUBQUERY"/>
+	</field>
+	<field name="ShipCountry" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="ShipCountry"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="SYSTEM_SUBQUERY"/>
+	</field>
+	<field name="OrderPrice" class="java.lang.Double">
+		<property name="com.jaspersoft.studio.field.label" value="OrderPrice"/>
+	</field>
+	<variable name="OrderPrice1" class="java.lang.Double" resetType="Group" resetGroup="OrderYear" calculation="Sum">
+		<variableExpression><![CDATA[$F{OrderPrice}]]></variableExpression>
+	</variable>
+	<variable name="OrderPrice2" class="java.lang.Double" resetType="Group" resetGroup="CompanyName" calculation="Sum">
+		<variableExpression><![CDATA[$F{OrderPrice}]]></variableExpression>
+	</variable>
+	<group name="CompanyName" keepTogether="true">
+		<groupExpression><![CDATA[$F{CompanyName}]]></groupExpression>
+		<groupHeader>
+			<band height="33">
+				<rectangle>
+					<reportElement x="0" y="9" width="555" height="24" uuid="f5fd07af-dbe6-43e2-b13c-6284d8002223"/>
+				</rectangle>
+				<staticText>
+					<reportElement x="10" y="9" width="130" height="20" forecolor="#0015FF" uuid="1c5c8ce1-7b6e-429c-96cb-18e1c08bcfb9"/>
+					<textElement>
+						<font size="14" isBold="true"/>
+					</textElement>
+					<text><![CDATA[Orders made by:]]></text>
+				</staticText>
+				<textField>
+					<reportElement x="140" y="9" width="415" height="20" uuid="f56e9b6e-e973-40b1-8a98-dd663565f82b"/>
+					<textElement>
+						<font size="14"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$F{CompanyName}]]></textFieldExpression>
+				</textField>
+			</band>
+		</groupHeader>
+		<groupFooter>
+			<band height="26">
+				<rectangle>
+					<reportElement x="0" y="0" width="555" height="26" uuid="75cde6dd-e386-4b14-991d-5a8674c03b56"/>
+				</rectangle>
+				<staticText>
+					<reportElement x="10" y="0" width="380" height="20" uuid="8d0505a3-46ad-475b-9923-2f13061d8064"/>
+					<textElement>
+						<font size="14" isBold="true"/>
+					</textElement>
+					<text><![CDATA[Total order price (company section):]]></text>
+				</staticText>
+				<textField pattern="#,##0.##¤;(#,##0.##) ¤">
+					<reportElement x="390" y="0" width="100" height="20" uuid="7eff0707-b0d6-4b1c-a89a-de3c81336255"/>
+					<textElement verticalAlignment="Middle"/>
+					<textFieldExpression><![CDATA[$V{OrderPrice2}]]></textFieldExpression>
+				</textField>
+			</band>
+		</groupFooter>
+	</group>
+	<group name="OrderYear" keepTogether="true">
+		<groupExpression><![CDATA[$F{OrderYear}]]></groupExpression>
+		<groupHeader>
+			<band height="42">
+				<rectangle>
+					<reportElement x="40" y="20" width="515" height="21" uuid="ad0d496c-4c78-4b9d-9d91-1aa687131ea0"/>
+				</rectangle>
+				<rectangle>
+					<reportElement x="20" y="0" width="535" height="20" uuid="65d84161-4516-4e4e-a5cc-bb7e3be0ca1b"/>
+				</rectangle>
+				<staticText>
+					<reportElement x="220" y="20" width="160" height="22" forecolor="#000000" uuid="40d8cbbf-e23c-4edc-b115-828e107138e6"/>
+					<textElement>
+						<font size="14" isBold="true"/>
+					</textElement>
+					<text><![CDATA[Ship Address]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="380" y="20" width="100" height="22" forecolor="#000000" uuid="7c272e4b-71d7-4d46-8715-b1126e234ebe"/>
+					<textElement>
+						<font size="14" isBold="true"/>
+					</textElement>
+					<text><![CDATA[Ship Country]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="480" y="20" width="76" height="22" forecolor="#000000" uuid="f35fd698-8a5a-497e-a9e8-2ebc336cd264"/>
+					<textElement>
+						<font size="14" isBold="true"/>
+					</textElement>
+					<text><![CDATA[Price]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="40" y="0" width="130" height="20" forecolor="#0015FF" uuid="4aa7d673-2955-42d4-abc6-74c7ffc7229a"/>
+					<textElement>
+						<font size="14" isBold="true"/>
+					</textElement>
+					<text><![CDATA[Orders made in:]]></text>
+				</staticText>
+				<textField>
+					<reportElement x="170" y="0" width="385" height="20" uuid="7b2453c6-7afa-4025-9c1d-633d864d29ea"/>
+					<textElement>
+						<font size="14"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$F{OrderYear}]]></textFieldExpression>
+				</textField>
+				<staticText>
+					<reportElement x="60" y="20" width="80" height="22" forecolor="#000000" uuid="79db458d-6d11-4318-989e-721adead466a"/>
+					<textElement>
+						<font size="14" isBold="true"/>
+					</textElement>
+					<text><![CDATA[Date]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="140" y="20" width="80" height="22" forecolor="#000000" uuid="d48e618d-4e54-4288-ad0f-5e8036ec5b55"/>
+					<textElement>
+						<font size="14" isBold="true"/>
+					</textElement>
+					<text><![CDATA[ID]]></text>
+				</staticText>
+				<line>
+					<reportElement x="0" y="0" width="1" height="41" uuid="18674add-38d8-44f2-ab94-a10d9bc1bbf6"/>
+				</line>
+			</band>
+		</groupHeader>
+		<groupFooter>
+			<band height="26">
+				<rectangle>
+					<reportElement x="40" y="0" width="515" height="20" uuid="39611cb7-6485-4e16-a997-26e3f90eaf00"/>
+				</rectangle>
+				<staticText>
+					<reportElement x="60" y="0" width="350" height="20" uuid="799e84e9-866d-4bcb-8100-6f6cf256d14c"/>
+					<textElement>
+						<font size="14" isBold="true"/>
+					</textElement>
+					<text><![CDATA[Total order price (company and year section):]]></text>
+				</staticText>
+				<textField pattern="#,##0.00¤;(#,##0.00) ¤">
+					<reportElement x="390" y="0" width="155" height="20" uuid="a46a1053-a7af-4722-bd7b-68157296df31"/>
+					<textElement verticalAlignment="Middle"/>
+					<textFieldExpression><![CDATA[$V{OrderPrice1}]]></textFieldExpression>
+				</textField>
+				<line>
+					<reportElement x="0" y="0" width="1" height="26" uuid="874afd39-7f52-4384-b279-c8c55b0ad9fa"/>
+				</line>
+				<line>
+					<reportElement x="555" y="20" width="1" height="6" uuid="86d78c0f-54fd-4541-9ae1-8f8d5e0a1a47"/>
+				</line>
+			</band>
+		</groupFooter>
+	</group>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band height="79" splitType="Stretch">
+			<staticText>
+				<reportElement x="0" y="0" width="555" height="79" uuid="b2cea666-4e6c-4afc-837b-eb8dbd4f212b">
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+				</reportElement>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="26" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Customer Order Report]]></text>
+			</staticText>
+			<textField pattern="MMMMM dd, yyyy">
+				<reportElement x="445" y="9" width="100" height="30" uuid="b3c54f01-4d40-4bf0-9cca-79d7eb6d5f3e"/>
+				<textFieldExpression><![CDATA[new java.util.Date()]]></textFieldExpression>
+			</textField>
+		</band>
+	</title>
+	<detail>
+		<band height="33" splitType="Stretch">
+			<property name="com.jaspersoft.studio.layout" value="com.jaspersoft.studio.editor.layout.FreeLayout"/>
+			<line>
+				<reportElement x="0" y="0" width="1" height="32" uuid="d4de4ed6-78c4-4fad-a098-9934778cbe4d"/>
+			</line>
+			<textField>
+				<reportElement x="140" y="-1" width="80" height="33" uuid="749fe440-0f48-44f7-bc9e-da98b2da4f2e"/>
+				<textElement verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$F{ORDERID}]]></textFieldExpression>
+			</textField>
+			<line>
+				<reportElement x="555" y="-1" width="1" height="34" uuid="704269f3-f2bc-464c-8876-01dc57d96f04"/>
+			</line>
+			<textField>
+				<reportElement x="60" y="0" width="80" height="32" uuid="73e4e5d0-9a71-48b8-bad2-a9edcf78596e"/>
+				<textElement verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$F{OrderDate}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="220" y="-1" width="160" height="34" uuid="8e6e7acb-403b-40bd-9203-c1734a996660"/>
+				<textElement verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[CONCATENATE($F{ShipAddress},", ", $F{ShipCity})]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="380" y="-1" width="100" height="34" uuid="e54f4fee-3e25-416c-8d11-206f572a1fba"/>
+				<textElement verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$F{ShipCountry}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0.00¤;(#,##0.00) ¤">
+				<reportElement x="480" y="0" width="75" height="32" uuid="5a16dade-9159-44ee-84f0-654714ceaf73"/>
+				<textElement verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$F{OrderPrice}]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+	<pageFooter>
+		<band height="51" splitType="Stretch">
+			<textField>
+				<reportElement x="230" y="10" width="100" height="30" uuid="49c5c46b-3c8a-45ae-a2cc-84665dfaf8af"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$V{PAGE_NUMBER}]]></textFieldExpression>
+			</textField>
+		</band>
+	</pageFooter>
+</jasperReport>
